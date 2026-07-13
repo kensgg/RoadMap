@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROADMAP.EXE &middot; Redes &amp; Ciberseguridad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#0d0f0b;--bg2:#111408;--panel:#151a0e;--panel2:#1c2413;
+            --border:#3a4a20;--border2:#556030;
+            --glow:#8ab240;--glow-dim:#3d5218;
+            --amber:#d4920a;--amber-dim:#4a3004;
+            --red:#c94040;--red-dim:#3e1010;
+            --text:#b8c890;--text-dim:#5a6840;--text-bright:#d8ee90;
+            --net:#4fc2a8;--net-dim:#1a4038;
+            --sec:#d4920a;--sec-dim:#4a3004;
+            --scanline:rgba(0,0,0,0.35);
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        html,body{min-height:100vh;}
+        body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;-webkit-font-smoothing:none;position:relative;overflow-x:hidden;}
+        body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,var(--scanline) 3px,var(--scanline) 4px);pointer-events:none;z-index:999;}
+        body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 90% 80% at 50% 50%,transparent 55%,rgba(0,0,0,0.7) 100%);pointer-events:none;z-index:998;}
+        .bg-grid{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.12;pointer-events:none;z-index:0;}
+        /* HEADER */
+        header{max-width:1140px;margin:0 auto;padding:36px 28px 20px;position:relative;z-index:2;}
+        .sys-bar{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-size:11px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;}
+        .sys-bar .led{width:8px;height:8px;border-radius:0;background:var(--glow);box-shadow:0 0 8px var(--glow),0 0 20px var(--glow-dim);animation:blink 1.4s step-start infinite;}
+        @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+        .sys-bar .sep{color:var(--border2);}
+        .title-block{background:var(--panel);border:2px solid var(--border);box-shadow:inset 0 0 0 1px var(--bg),4px 4px 0 var(--border);padding:18px 24px 16px;margin-bottom:24px;}
+        .title-tag{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--glow);margin-bottom:10px;}
+        h1{font-family:'VT323',monospace;font-size:clamp(32px,6vw,62px);line-height:1.05;color:var(--text-bright);text-shadow:0 0 30px rgba(138,178,64,0.4),2px 2px 0 rgba(0,0,0,0.8);letter-spacing:0.04em;margin-bottom:10px;animation:glitch 8s infinite;}
+        @keyframes glitch{0%,95%,100%{text-shadow:0 0 30px rgba(138,178,64,0.4),2px 2px 0 rgba(0,0,0,0.8);}96%{text-shadow:-2px 0 var(--net),2px 2px 0 rgba(0,0,0,0.8);}97%{text-shadow:2px 0 var(--sec),2px 2px 0 rgba(0,0,0,0.8);}98%{text-shadow:0 0 30px rgba(138,178,64,0.4),2px 2px 0 rgba(0,0,0,0.8);}}
+        h1 .net{color:var(--net);text-shadow:0 0 20px rgba(79,194,168,0.5);}
+        h1 .sec{color:var(--sec);text-shadow:0 0 20px rgba(212,146,10,0.5);}
+        .subtitle{font-size:13px;line-height:1.7;color:var(--text-dim);max-width:680px;letter-spacing:0.02em;}
+        .legend{display:flex;flex-wrap:wrap;gap:18px;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px;}
+        .legend-item{display:flex;align-items:center;gap:8px;color:var(--text-dim);}
+        .legend-swatch{width:10px;height:10px;border:1px solid currentColor;}
+        .progress-wrap{max-width:100%;margin-bottom:4px;}
+        .progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
+        .progress-track{height:10px;background:var(--panel2);border:1px solid var(--border);position:relative;overflow:hidden;}
+        .progress-track::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 8px,rgba(0,0,0,0.3) 8px,rgba(0,0,0,0.3) 9px);}
+        .progress-fill{height:100%;width:0%;background:var(--glow);box-shadow:0 0 8px var(--glow);transition:width .4s steps(20);}
+        .reset-btn{margin-top:12px;background:transparent;border:1px solid var(--border2);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;cursor:pointer;transition:color .15s,border-color .15s,box-shadow .15s;}
+        .reset-btn:hover{border-color:var(--red);color:var(--red);box-shadow:0 0 8px var(--red-dim);}
+        /* TIMELINE */
+        .timeline{max-width:1140px;margin:0 auto;padding:10px 28px 60px;position:relative;z-index:2;}
+        .track-headers{display:grid;grid-template-columns:1fr 140px 1fr;margin-bottom:4px;position:sticky;top:0;background:linear-gradient(var(--bg) 80%,transparent);padding:12px 0 16px;z-index:5;}
+        .col-title{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:10px;}
+        .col-title.left{justify-content:flex-end;color:var(--net);}
+        .col-title.right{color:var(--sec);}
+        .col-title .bar{flex:1;height:1px;background:currentColor;opacity:0.4;}
+        .month-row{display:grid;grid-template-columns:1fr 140px 1fr;position:relative;padding:10px 0 36px;align-items:start;}
+        .month-row::before{content:'';position:absolute;left:calc(50% - 1px);top:0;bottom:0;width:2px;background:repeating-linear-gradient(180deg,var(--border) 0px,var(--border) 6px,transparent 6px,transparent 10px);z-index:0;}
+        .month-row:last-child::before{bottom:50%;}
+        .spine{display:flex;flex-direction:column;align-items:center;position:relative;z-index:2;}
+        .spine .node{width:16px;height:16px;background:var(--bg);border:2px solid var(--border2);margin-top:8px;transition:border-color .3s,box-shadow .3s;}
+        .spine.active .node{border-color:var(--glow);background:var(--glow-dim);box-shadow:0 0 0 3px var(--bg),0 0 12px var(--glow),0 0 24px var(--glow-dim);}
+        .month-label{font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:8px;text-transform:uppercase;letter-spacing:0.06em;text-align:center;}
+        .month-pct{font-size:10px;color:var(--glow);margin-top:2px;text-align:center;letter-spacing:0.06em;}
+        /* CARD */
+        .card{background:var(--panel);border:2px solid var(--border);box-shadow:inset 0 0 0 1px var(--bg),3px 3px 0 var(--border);max-width:420px;transition:box-shadow .2s,border-color .2s;}
+        .card:hover{border-color:var(--border2);box-shadow:inset 0 0 0 1px var(--bg),3px 3px 0 var(--border2),0 0 16px rgba(138,178,64,0.1);}
+        .card.net{justify-self:end;border-top:3px solid var(--net);}
+        .card.sec{border-top:3px solid var(--sec);}
+        .card-top-bar{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--panel2);}
+        .card.net .card-top-bar{background:rgba(79,194,168,0.05);}
+        .card.sec .card-top-bar{background:rgba(212,146,10,0.05);}
+        .card .tag{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:2px 6px;border:1px solid currentColor;}
+        .card.net .tag{color:var(--net);}
+        .card.sec .tag{color:var(--sec);}
+        .card-dot-row{display:flex;gap:4px;}
+        .card-dot{width:7px;height:7px;border:1px solid var(--border2);}
+        .card-body{padding:14px 16px 12px;}
+        .card h3{font-family:'VT323',monospace;font-size:22px;letter-spacing:0.05em;color:var(--text-bright);margin-bottom:12px;}
+        .topic-list{list-style:none;}
+        .topic{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.5;color:var(--text);padding:5px 0;border-bottom:1px dotted var(--panel2);cursor:pointer;user-select:none;letter-spacing:0.02em;}
+        .topic:last-child{border-bottom:none;}
+        .topic input{appearance:none;-webkit-appearance:none;width:13px;height:13px;min-width:13px;border:1px solid var(--border2);margin-top:1px;cursor:pointer;background:transparent;position:relative;}
+        .card.net .topic input:checked{background:var(--net);border-color:var(--net);box-shadow:0 0 6px var(--net);}
+        .card.sec .topic input:checked{background:var(--sec);border-color:var(--sec);box-shadow:0 0 6px var(--sec);}
+        .topic input:checked::after{content:'X';position:absolute;left:1px;top:-1px;font-size:10px;color:var(--bg);font-family:'Share Tech Mono',monospace;line-height:1;}
+        .topic span.txt{transition:color .2s,opacity .2s;}
+        .topic input:checked+span.txt{color:var(--text-dim);text-decoration:line-through;opacity:0.6;}
+        .res-toggle{margin-top:10px;background:none;border:1px solid var(--border);padding:4px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color .15s;}
+        .card.net .res-toggle{color:var(--net);}
+        .card.sec .res-toggle{color:var(--sec);}
+        .card.net .res-toggle:hover{border-color:var(--net);}
+        .card.sec .res-toggle:hover{border-color:var(--sec);}
+        .res-toggle .chev{transition:transform .25s steps(4);display:inline-block;}
+        .res-toggle.open .chev{transform:rotate(90deg);}
+        .resources{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+        .resources.open{max-height:600px;margin-top:10px;}
+        .resources-inner{border-top:1px solid var(--border);padding-top:10px;display:flex;flex-direction:column;gap:4px;}
+        .res-section-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);margin:8px 0 2px;}
+        .res-section-label:first-child{margin-top:0;}
+        .res-link{display:flex;align-items:center;gap:8px;font-size:11px;text-decoration:none;color:var(--text);padding:4px 6px;border-left:2px solid transparent;transition:border-color .15s,background .15s,color .15s;letter-spacing:0.02em;}
+        .card.net .res-link:hover{border-left-color:var(--net);background:rgba(79,194,168,0.06);color:var(--net);}
+        .card.sec .res-link:hover{border-left-color:var(--sec);background:rgba(212,146,10,0.06);color:var(--sec);}
+        .res-link .ext{font-size:9px;color:var(--text-dim);border:1px solid var(--border);padding:0 4px;letter-spacing:0.08em;}
+        .res-link::before{content:'triangleright';font-size:10px;color:var(--text-dim);}
+        /* BONUS */
+        .bonus{max-width:1140px;margin:40px auto 80px;padding:0 28px;position:relative;z-index:2;}
+        .bonus-card{background:var(--panel);border:2px solid var(--border);box-shadow:inset 0 0 0 1px var(--bg),3px 3px 0 var(--border);padding:20px 24px;display:flex;gap:20px;align-items:flex-start;}
+        .bonus-card .icon{font-family:'VT323',monospace;font-size:13px;color:var(--amber);border:1px solid var(--amber-dim);padding:4px 8px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.08em;background:rgba(212,146,10,0.05);}
+        .bonus-card h4{font-family:'VT323',monospace;font-size:20px;color:var(--amber);letter-spacing:0.06em;margin-bottom:6px;}
+        .bonus-card p{font-size:12px;line-height:1.7;color:var(--text-dim);margin-bottom:10px;letter-spacing:0.02em;}
+        .bonus-card .res-link{color:var(--amber);}
+        /* FOOTER */
+        footer{text-align:center;padding:24px 20px 60px;font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;position:relative;z-index:2;}
+        footer::before{content:'SYSTEM OK - PROGRESS SAVED IN BROWSER STORAGE';display:block;color:var(--glow-dim);margin-bottom:8px;font-size:9px;}
+        /* REVEAL */
+        .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+        .reveal.show{opacity:1;transform:translateY(0);}
+        /* MOBILE */
+        @media(max-width:760px){
+            .track-headers{display:none;}
+            .month-row{grid-template-columns:1fr;padding:0 0 28px;}
+            .month-row::before{left:22px;}
+            .spine{flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:12px;}
+            .spine .node{margin-top:0;}
+            .month-label,.month-pct{text-align:left;margin-top:0;}
+            .card.net,.card.sec{justify-self:stretch;max-width:100%;margin-left:0;}
+            .card+.card{margin-top:12px;}
+        }
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<header>
+    <div class="sys-bar">
+        <div class="led"></div>
+        <span>ROADMAP.EXE</span>
+        <span class="sep">|</span>
+        <span>julio 2026</span>
+        <span class="sep">|</span>
+        <span>redes &amp; ciberseguridad</span>
+        <span class="sep">|</span>
+        <span id="clockDisplay"></span>
+    </div>
+    <div class="title-block">
+        <div class="title-tag">&#9658; plan.init() -- dual track active</div>
+        <h1>ROADMAP <span class="net">REDES</span> &amp; <span class="sec">CIBER</span><br>EN PARALELO</h1>
+        <p class="subtitle">Dos rutas corriendo al mismo tiempo -- infraestructura y defensa -- construyendo habilidades reales mes a mes. Marca lo que completes y abre los recursos de cada modulo para ir directo a la fuente.</p>
+    </div>
+    <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:var(--net);border-color:var(--net)"></span> Ruta de Redes</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:var(--sec);border-color:var(--sec)"></span> Ruta de Ciberseguridad</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:var(--glow);border-color:var(--glow)"></span> Convergencia</div>
+    </div>
+    <div class="progress-wrap">
+        <div class="progress-label"><span>&#9658; PROGRESO GENERAL</span><span id="progressText">0 / 0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <button class="reset-btn" id="resetBtn">[ REINICIAR PROGRESO ]</button>
+</header>
+<div class="timeline">
+    <div class="track-headers">
+        <div class="col-title left"><span class="bar"></span>Redes</div>
+        <div></div>
+        <div class="col-title right">Ciberseguridad<span class="bar"></span></div>
+    </div>
+    <!-- JULIO -->
+    <div class="month-row reveal" data-month="jul">
+        <div class="card net">
+            <div class="card-top-bar"><span class="tag">Fundamentos</span><div class="card-dot-row"><div class="card-dot" style="background:var(--net)"></div><div class="card-dot"></div><div class="card-dot"></div></div></div>
+            <div class="card-body">
+                <h3>OSI / TCP-IP a fondo</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="jul-net-1"><span class="txt">Repasar las 7 capas con trafico real, no solo teoria</span></li>
+                    <li class="topic"><input type="checkbox" data-id="jul-net-2"><span class="txt">Wireshark: capturar y leer paquetes propios</span></li>
+                    <li class="topic"><input type="checkbox" data-id="jul-net-3"><span class="txt">Diferenciar TCP vs UDP en la practica</span></li>
+                    <li class="topic"><input type="checkbox" data-id="jul-net-4"><span class="txt">Entender el three-way handshake de TCP</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Herramientas</div>
+                    <a class="res-link" href="https://www.wireshark.org/download.html" target="_blank" rel="noopener">Wireshark <span class="ext">descarga</span></a>
+                    <a class="res-link" href="https://nmap.org/download.html" target="_blank" rel="noopener">Nmap <span class="ext">herramienta</span></a>
+                    <div class="res-section-label">Guias</div>
+                    <a class="res-link" href="https://www.practicalnetworking.net/series/packet-traveling/packet-traveling/" target="_blank" rel="noopener">Packet Traveling <span class="ext">guia OSI</span></a>
+                    <a class="res-link" href="https://www.cloudflare.com/learning/network-layer/what-is-a-packet/" target="_blank" rel="noopener">Que es un paquete? <span class="ext">cloudflare</span></a>
+                    <div class="res-section-label">Video</div>
+                    <a class="res-link" href="https://www.youtube.com/watch?v=bj-Yfakjllc" target="_blank" rel="noopener">TCP/IP crash course <span class="ext">youtube</span></a>
+                    <a class="res-link" href="https://www.youtube.com/results?search_query=wireshark+basics+tutorial" target="_blank" rel="noopener">Wireshark basics <span class="ext">youtube</span></a>
+                </div></div>
+            </div>
+        </div>
+        <div class="spine active"><div class="node"></div><div class="month-label">Julio</div><div class="month-pct" data-pct="jul">0%</div></div>
+        <div class="card sec">
+            <div class="card-top-bar"><span class="tag">Fundamentos</span><div class="card-dot-row"><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot"></div><div class="card-dot"></div></div></div>
+            <div class="card-body">
+                <h3>TryHackMe - Pre Security</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="jul-sec-1"><span class="txt">Completar la ruta introductoria completa</span></li>
+                    <li class="topic"><input type="checkbox" data-id="jul-sec-2"><span class="txt">Vocabulario: CIA triad, vectores de ataque</span></li>
+                    <li class="topic"><input type="checkbox" data-id="jul-sec-3"><span class="txt">Primeras maquinas guiadas en THM</span></li>
+                    <li class="topic"><input type="checkbox" data-id="jul-sec-4"><span class="txt">Diferencia entre offensive y defensive security</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Plataformas</div>
+                    <a class="res-link" href="https://tryhackme.com/path/outline/presecurity" target="_blank" rel="noopener">TryHackMe Pre Security <span class="ext">ruta</span></a>
+                    <a class="res-link" href="https://tryhackme.com/" target="_blank" rel="noopener">TryHackMe <span class="ext">plataforma</span></a>
+                    <div class="res-section-label">Conceptos</div>
+                    <a class="res-link" href="https://www.cloudflare.com/learning/security/glossary/cia-triad/" target="_blank" rel="noopener">CIA Triad explicado <span class="ext">cloudflare</span></a>
+                    <a class="res-link" href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&amp;CK <span class="ext">framework</span></a>
+                </div></div>
+            </div>
+        </div>
+    </div>
+    <!-- AGOSTO -->
+    <div class="month-row reveal" data-month="ago">
+        <div class="card net">
+            <div class="card-top-bar"><span class="tag">Direccionamiento</span><div class="card-dot-row"><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div><div class="card-dot"></div></div></div>
+            <div class="card-body">
+                <h3>Subnetting &amp; VLSM</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="ago-net-1"><span class="txt">Practicar subnetting hasta que sea automatico</span></li>
+                    <li class="topic"><input type="checkbox" data-id="ago-net-2"><span class="txt">Protocolos: DNS, DHCP, HTTP/HTTPS</span></li>
+                    <li class="topic"><input type="checkbox" data-id="ago-net-3"><span class="txt">Simular topologias en Packet Tracer</span></li>
+                    <li class="topic"><input type="checkbox" data-id="ago-net-4"><span class="txt">IPv6 basico: diferencias con IPv4</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Practica</div>
+                    <a class="res-link" href="https://subnettingpractice.com/" target="_blank" rel="noopener">Subnetting Practice <span class="ext">ejercicios</span></a>
+                    <a class="res-link" href="https://www.subnet-calculator.com/" target="_blank" rel="noopener">Subnet Calculator <span class="ext">herramienta</span></a>
+                    <div class="res-section-label">Simuladores</div>
+                    <a class="res-link" href="https://www.netacad.com/courses/packet-tracer" target="_blank" rel="noopener">Cisco Packet Tracer <span class="ext">descarga</span></a>
+                    <a class="res-link" href="https://www.gns3.com/" target="_blank" rel="noopener">GNS3 <span class="ext">alternativa</span></a>
+                    <div class="res-section-label">Video</div>
+                    <a class="res-link" href="https://www.youtube.com/watch?v=BWZ-MkIZa_U" target="_blank" rel="noopener">Subnetting simplificado <span class="ext">youtube</span></a>
+                    <a class="res-link" href="https://www.youtube.com/watch?v=qiQR5rTSshw" target="_blank" rel="noopener">DNS explicado <span class="ext">youtube</span></a>
+                </div></div>
+            </div>
+        </div>
+        <div class="spine"><div class="node"></div><div class="month-label">Agosto</div><div class="month-pct" data-pct="ago">0%</div></div>
+        <div class="card sec">
+            <div class="card-top-bar"><span class="tag">Sistemas</span><div class="card-dot-row"><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot"></div></div></div>
+            <div class="card-body">
+                <h3>Linux &amp; Hardening basico</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="ago-sec-1"><span class="txt">Terminal, permisos, usuarios, procesos, systemd</span></li>
+                    <li class="topic"><input type="checkbox" data-id="ago-sec-2"><span class="txt">Bash scripting para tareas repetitivas</span></li>
+                    <li class="topic"><input type="checkbox" data-id="ago-sec-3"><span class="txt">Conceptos de hardening de un servidor</span></li>
+                    <li class="topic"><input type="checkbox" data-id="ago-sec-4"><span class="txt">SSH, criptografia de llaves y fail2ban</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Plataformas</div>
+                    <a class="res-link" href="https://tryhackme.com/path/outline/linux" target="_blank" rel="noopener">TryHackMe Linux <span class="ext">ruta</span></a>
+                    <a class="res-link" href="https://overthewire.org/wargames/bandit/" target="_blank" rel="noopener">OverTheWire Bandit <span class="ext">wargame</span></a>
+                    <div class="res-section-label">Guias</div>
+                    <a class="res-link" href="https://www.cyberciti.biz/tips/linux-security.html" target="_blank" rel="noopener">Linux hardening basics <span class="ext">guia</span></a>
+                    <a class="res-link" href="https://linuxjourney.com/" target="_blank" rel="noopener">Linux Journey <span class="ext">interactivo</span></a>
+                    <a class="res-link" href="https://www.ssh.com/academy/ssh/keygen" target="_blank" rel="noopener">SSH keygen guide <span class="ext">ssh.com</span></a>
+                </div></div>
+            </div>
+        </div>
+    </div>
+    <!-- SEPTIEMBRE -->
+    <div class="month-row reveal" data-month="sep">
+        <div class="card net">
+            <div class="card-top-bar"><span class="tag">Segmentacion</span><div class="card-dot-row"><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div><div class="card-dot"></div></div></div>
+            <div class="card-body">
+                <h3>Firewalls &amp; VLANs</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="sep-net-1"><span class="txt">Reglas de firewall con pfSense o OPNsense</span></li>
+                    <li class="topic"><input type="checkbox" data-id="sep-net-2"><span class="txt">VLANs y por que segmentar una red</span></li>
+                    <li class="topic"><input type="checkbox" data-id="sep-net-3"><span class="txt">Intro a IDS/IPS: diferencias clave</span></li>
+                    <li class="topic"><input type="checkbox" data-id="sep-net-4"><span class="txt">Configurar NAT y port forwarding</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Herramientas</div>
+                    <a class="res-link" href="https://www.pfsense.org/download/" target="_blank" rel="noopener">pfSense <span class="ext">descarga</span></a>
+                    <a class="res-link" href="https://opnsense.org/download/" target="_blank" rel="noopener">OPNsense <span class="ext">alternativa</span></a>
+                    <a class="res-link" href="https://www.snort.org/" target="_blank" rel="noopener">Snort IDS <span class="ext">open source</span></a>
+                    <div class="res-section-label">Guias</div>
+                    <a class="res-link" href="https://tryhackme.com/path/outline/soc-level-1" target="_blank" rel="noopener">Intro IDS/IPS (SOC L1) <span class="ext">ruta</span></a>
+                    <a class="res-link" href="https://www.youtube.com/watch?v=lUfa6LQtFqA" target="_blank" rel="noopener">VLANs explained <span class="ext">youtube</span></a>
+                </div></div>
+            </div>
+        </div>
+        <div class="spine"><div class="node"></div><div class="month-label">Sep</div><div class="month-pct" data-pct="sep">0%</div></div>
+        <div class="card sec">
+            <div class="card-top-bar"><span class="tag">Blue Team</span><div class="card-dot-row"><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot"></div></div></div>
+            <div class="card-body">
+                <h3>TryHackMe - SOC Level 1</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="sep-sec-1"><span class="txt">Completar la ruta orientada a analista SOC</span></li>
+                    <li class="topic"><input type="checkbox" data-id="sep-sec-2"><span class="txt">Que es un IOC y como se detecta</span></li>
+                    <li class="topic"><input type="checkbox" data-id="sep-sec-3"><span class="txt">Primer contacto real con un SIEM</span></li>
+                    <li class="topic"><input type="checkbox" data-id="sep-sec-4"><span class="txt">Analisis de logs: identificar anomalias</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Ruta principal</div>
+                    <a class="res-link" href="https://tryhackme.com/path/outline/soc-level-1" target="_blank" rel="noopener">TryHackMe SOC Level 1 <span class="ext">ruta</span></a>
+                    <div class="res-section-label">Complementos</div>
+                    <a class="res-link" href="https://cyberdefenders.org/" target="_blank" rel="noopener">CyberDefenders <span class="ext">blue team labs</span></a>
+                    <a class="res-link" href="https://blueteamlabs.online/" target="_blank" rel="noopener">Blue Team Labs Online <span class="ext">practica</span></a>
+                    <a class="res-link" href="https://www.elastic.co/what-is/siem" target="_blank" rel="noopener">Que es un SIEM? <span class="ext">elastic</span></a>
+                </div></div>
+            </div>
+        </div>
+    </div>
+    <!-- OCTUBRE -->
+    <div class="month-row reveal" data-month="oct">
+        <div class="card net">
+            <div class="card-top-bar"><span class="tag">Laboratorio</span><div class="card-dot-row"><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div></div></div>
+            <div class="card-body">
+                <h3>Red virtual propia</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="oct-net-1"><span class="txt">Montar topologia completa en GNS3</span></li>
+                    <li class="topic"><input type="checkbox" data-id="oct-net-2"><span class="txt">Routers, switches y ACLs configurados por ti</span></li>
+                    <li class="topic"><input type="checkbox" data-id="oct-net-3"><span class="txt">Documentar la red como un proyecto real</span></li>
+                    <li class="topic"><input type="checkbox" data-id="oct-net-4"><span class="txt">Capturar y analizar trafico de tu propia red</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Simuladores</div>
+                    <a class="res-link" href="https://www.gns3.com/software/download" target="_blank" rel="noopener">GNS3 <span class="ext">descarga</span></a>
+                    <a class="res-link" href="https://www.eve-ng.net/" target="_blank" rel="noopener">EVE-NG <span class="ext">alternativa</span></a>
+                    <div class="res-section-label">Referencia</div>
+                    <a class="res-link" href="https://gns3.com/community" target="_blank" rel="noopener">GNS3 Community <span class="ext">foro</span></a>
+                    <a class="res-link" href="https://www.youtube.com/c/davidbombal" target="_blank" rel="noopener">David Bombal <span class="ext">youtube</span></a>
+                </div></div>
+            </div>
+        </div>
+        <div class="spine"><div class="node"></div><div class="month-label">Oct</div><div class="month-pct" data-pct="oct">0%</div></div>
+        <div class="card sec">
+            <div class="card-top-bar"><span class="tag">SIEM</span><div class="card-dot-row"><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div></div></div>
+            <div class="card-body">
+                <h3>Wazuh en casa</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="oct-sec-1"><span class="txt">Instalar Wazuh (open source) en una VM</span></li>
+                    <li class="topic"><input type="checkbox" data-id="oct-sec-2"><span class="txt">Generar trafico atacante desde otra VM</span></li>
+                    <li class="topic"><input type="checkbox" data-id="oct-sec-3"><span class="txt">Leer y entender las alertas que dispara</span></li>
+                    <li class="topic"><input type="checkbox" data-id="oct-sec-4"><span class="txt">Integrar dashboards Kibana/OpenSearch</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Wazuh</div>
+                    <a class="res-link" href="https://documentation.wazuh.com/current/quickstart.html" target="_blank" rel="noopener">Wazuh Quickstart <span class="ext">docs</span></a>
+                    <a class="res-link" href="https://wazuh.com/blog/" target="_blank" rel="noopener">Wazuh Blog <span class="ext">casos reales</span></a>
+                    <div class="res-section-label">Alternativas SIEM</div>
+                    <a class="res-link" href="https://www.splunk.com/en_us/products/splunk-free.html" target="_blank" rel="noopener">Splunk Free <span class="ext">alternativa</span></a>
+                    <a class="res-link" href="https://www.elastic.co/security" target="_blank" rel="noopener">Elastic Security <span class="ext">alternativa</span></a>
+                    <div class="res-section-label">Labs</div>
+                    <a class="res-link" href="https://tryhackme.com/room/wazuhct" target="_blank" rel="noopener">THM Wazuh room <span class="ext">practica</span></a>
+                </div></div>
+            </div>
+        </div>
+    </div>
+    <!-- NOVIEMBRE -->
+    <div class="month-row reveal" data-month="nov">
+        <div class="card net">
+            <div class="card-top-bar"><span class="tag">Integracion</span><div class="card-dot-row"><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div></div></div>
+            <div class="card-body">
+                <h3>Red + monitoreo unidos</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="nov-net-1"><span class="txt">Conectar tu red virtual con el SIEM</span></li>
+                    <li class="topic"><input type="checkbox" data-id="nov-net-2"><span class="txt">Ver como un cambio de red se refleja en logs</span></li>
+                    <li class="topic"><input type="checkbox" data-id="nov-net-3"><span class="txt">Analisis de pcap buscando anomalias</span></li>
+                    <li class="topic"><input type="checkbox" data-id="nov-net-4"><span class="txt">Automatizar alertas con scripts bash</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Pcap / Trafico real</div>
+                    <a class="res-link" href="https://www.malware-traffic-analysis.net/" target="_blank" rel="noopener">Malware Traffic Analysis <span class="ext">pcaps reales</span></a>
+                    <a class="res-link" href="https://www.netresec.com/?page=PcapFiles" target="_blank" rel="noopener">NETRESEC pcap files <span class="ext">dataset</span></a>
+                    <div class="res-section-label">Analisis</div>
+                    <a class="res-link" href="https://zeek.org/" target="_blank" rel="noopener">Zeek Network Monitor <span class="ext">framework</span></a>
+                    <a class="res-link" href="https://suricata.io/" target="_blank" rel="noopener">Suricata IDS/IPS <span class="ext">open source</span></a>
+                </div></div>
+            </div>
+        </div>
+        <div class="spine"><div class="node"></div><div class="month-label">Nov</div><div class="month-pct" data-pct="nov">0%</div></div>
+        <div class="card sec">
+            <div class="card-top-bar"><span class="tag">Respuesta</span><div class="card-dot-row"><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div></div></div>
+            <div class="card-body">
+                <h3>Incident Response basico</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="nov-sec-1"><span class="txt">Framework: identificacion, contencion, erradicacion, recuperacion</span></li>
+                    <li class="topic"><input type="checkbox" data-id="nov-sec-2"><span class="txt">Simular un incidente pequeno de principio a fin</span></li>
+                    <li class="topic"><input type="checkbox" data-id="nov-sec-3"><span class="txt">Reporte de incidente por escrito</span></li>
+                    <li class="topic"><input type="checkbox" data-id="nov-sec-4"><span class="txt">Digital forensics basico: volatility y timeline</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Frameworks</div>
+                    <a class="res-link" href="https://www.sans.org/media/score/504-incident-response-cycle.pdf" target="_blank" rel="noopener">SANS Incident Response <span class="ext">pdf</span></a>
+                    <a class="res-link" href="https://www.nist.gov/publications/computer-security-incident-handling-guide" target="_blank" rel="noopener">NIST SP 800-61 <span class="ext">guia</span></a>
+                    <div class="res-section-label">Labs</div>
+                    <a class="res-link" href="https://tryhackme.com/path/outline/soc-level-1" target="_blank" rel="noopener">Modulos IR (SOC L1) <span class="ext">ruta</span></a>
+                    <a class="res-link" href="https://cyberdefenders.org/blueteam-ctf-challenges/" target="_blank" rel="noopener">CyberDefenders CTF <span class="ext">blue team</span></a>
+                    <div class="res-section-label">Forensics</div>
+                    <a class="res-link" href="https://www.volatilityfoundation.org/" target="_blank" rel="noopener">Volatility Framework <span class="ext">memory forensics</span></a>
+                </div></div>
+            </div>
+        </div>
+    </div>
+    <!-- DICIEMBRE -->
+    <div class="month-row reveal" data-month="dic">
+        <div class="card net">
+            <div class="card-top-bar"><span class="tag">Certificacion</span><div class="card-dot-row"><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div><div class="card-dot" style="background:var(--net)"></div></div></div>
+            <div class="card-body">
+                <h3>Network+ (temario)</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="dic-net-1"><span class="txt">Repasar el temario completo N10-009</span></li>
+                    <li class="topic"><input type="checkbox" data-id="dic-net-2"><span class="txt">Examenes de practica cronometrados</span></li>
+                    <li class="topic"><input type="checkbox" data-id="dic-net-3"><span class="txt">Cerrar huecos detectados en meses anteriores</span></li>
+                    <li class="topic"><input type="checkbox" data-id="dic-net-4"><span class="txt">Armar cheat sheet personal de comandos</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Oficial</div>
+                    <a class="res-link" href="https://www.comptia.org/certifications/network" target="_blank" rel="noopener">CompTIA Network+ <span class="ext">oficial</span></a>
+                    <div class="res-section-label">Cursos gratuitos</div>
+                    <a class="res-link" href="https://www.professormesser.com/network-plus/n10-009/n10-009-video/n10-009-training-course/" target="_blank" rel="noopener">Professor Messer <span class="ext">curso gratis</span></a>
+                    <a class="res-link" href="https://www.youtube.com/c/NetworkChuck" target="_blank" rel="noopener">NetworkChuck <span class="ext">youtube</span></a>
+                    <div class="res-section-label">Simulacros</div>
+                    <a class="res-link" href="https://www.examcompass.com/comptia-network-plus-practice-tests" target="_blank" rel="noopener">ExamCompass <span class="ext">practica</span></a>
+                </div></div>
+            </div>
+        </div>
+        <div class="spine"><div class="node"></div><div class="month-label">Dic</div><div class="month-pct" data-pct="dic">0%</div></div>
+        <div class="card sec">
+            <div class="card-top-bar"><span class="tag">Certificacion</span><div class="card-dot-row"><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div><div class="card-dot" style="background:var(--sec)"></div></div></div>
+            <div class="card-body">
+                <h3>Security+ (temario)</h3>
+                <ul class="topic-list">
+                    <li class="topic"><input type="checkbox" data-id="dic-sec-1"><span class="txt">Repasar temario SY0-701 y hacer simulacros</span></li>
+                    <li class="topic"><input type="checkbox" data-id="dic-sec-2"><span class="txt">Armar tu propio cheat sheet de dominios</span></li>
+                    <li class="topic"><input type="checkbox" data-id="dic-sec-3"><span class="txt">Pulir el mini-lab para mostrar en entrevistas</span></li>
+                    <li class="topic"><input type="checkbox" data-id="dic-sec-4"><span class="txt">Practicar PBQ (performance-based questions)</span></li>
+                </ul>
+                <button class="res-toggle"><span class="chev">&#9658;</span> recursos</button>
+                <div class="resources"><div class="resources-inner">
+                    <div class="res-section-label">Oficial</div>
+                    <a class="res-link" href="https://www.comptia.org/certifications/security" target="_blank" rel="noopener">CompTIA Security+ <span class="ext">oficial</span></a>
+                    <div class="res-section-label">Cursos gratuitos</div>
+                    <a class="res-link" href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-training-course/" target="_blank" rel="noopener">Professor Messer <span class="ext">curso gratis</span></a>
+                    <a class="res-link" href="https://www.youtube.com/c/InsideCloudAndSecurity" target="_blank" rel="noopener">Inside Cloud and Security <span class="ext">youtube</span></a>
+                    <div class="res-section-label">Simulacros</div>
+                    <a class="res-link" href="https://www.examcompass.com/comptia/security-plus-certification/security-plus-practice-tests" target="_blank" rel="noopener">ExamCompass Sec+ <span class="ext">practica</span></a>
+                    <a class="res-link" href="https://www.dion.training/collections/comptia-security" target="_blank" rel="noopener">Dion Training <span class="ext">simulacros</span></a>
+                </div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- BONUS -->
+<div class="bonus reveal">
+    <div class="bonus-card">
+        <span class="icon">* bonus</span>
+        <div>
+            <h4>Ventaja Queretaro: seguridad OT/ICS</h4>
+            <p>Con la industria automotriz y aeroespacial local, vale la pena dar un vistazo (no a fondo, solo vocabulario) a seguridad de sistemas industriales: SCADA, el modelo Purdue, y por que segmentar redes OT de redes IT.</p>
+            <a class="res-link" href="https://www.sans.org/posters/ics-410-poster/" target="_blank" rel="noopener">SANS ICS Security Poster <span class="ext">pdf</span></a>
+            <a class="res-link" href="https://www.cisa.gov/ics" target="_blank" rel="noopener">CISA ICS Resources <span class="ext">oficial</span></a>
+        </div>
+    </div>
+</div>
+<footer>plan generado el 13 de julio de 2026 -- tu progreso se guarda en este navegador</footer>
+<script>
+    function tick(){var n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0'),s=String(n.getSeconds()).padStart(2,'0'),el=document.getElementById('clockDisplay');if(el)el.textContent=h+':'+m+':'+s;}
+    tick();setInterval(tick,1000);
+    var reveals=document.querySelectorAll('.reveal');
+    var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('show');});},{threshold:0.1});
+    reveals.forEach(function(el){io.observe(el);});
+    document.querySelectorAll('.res-toggle').forEach(function(btn){btn.addEventListener('click',function(){var r=btn.nextElementSibling;var open=r.classList.toggle('open');btn.classList.toggle('open',open);});});
+    var KEY='roadmap-redes-ciber-progress';
+    var state={};
+    try{state=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){state={};}
+    var checkboxes=Array.from(document.querySelectorAll('.topic input[type="checkbox"]'));
+    function saveState(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+    function updateProgress(){
+        var total=checkboxes.length;
+        var done=checkboxes.filter(function(cb){return cb.checked;}).length;
+        document.getElementById('progressText').textContent=done+' / '+total;
+        document.getElementById('progressFill').style.width=(total?(done/total*100):0)+'%';
+        document.querySelectorAll('.month-row').forEach(function(row){
+            var boxes=Array.from(row.querySelectorAll('.topic input[type="checkbox"]'));
+            var d=boxes.filter(function(b){return b.checked;}).length;
+            var pct=boxes.length?Math.round(d/boxes.length*100):0;
+            var month=row.dataset.month;
+            var pctEl=row.querySelector('[data-pct="'+month+'"]');
+            if(pctEl)pctEl.textContent=pct+'%';
+            var spine=row.querySelector('.spine');
+            if(pct===100)spine.classList.add('active');
+            else spine.classList.remove('active');
+        });
+    }
+    checkboxes.forEach(function(cb){
+        var id=cb.dataset.id;
+        if(state[id])cb.checked=true;
+        cb.addEventListener('change',function(){state[id]=cb.checked;saveState();updateProgress();});
+    });
+    document.getElementById('resetBtn').addEventListener('click',function(){
+        if(confirm('Reiniciar todo tu progreso marcado?')){
+            state={};saveState();
+            checkboxes.forEach(function(cb){cb.checked=false;});
+            updateProgress();
+        }
+    });
+    updateProgress();
+</script>
+</body>
+</html>
